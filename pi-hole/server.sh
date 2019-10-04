@@ -52,7 +52,7 @@ if [ -z "$PASSWORD" ]; then error "No password"; fi
 # Install system updates.
 sudo apt update
 sudo apt dist-upgrade -yq
-sudo apt install -y software-properties-common
+sudo apt install -y software-properties-common wget
 
 # Install Nginx.
 sudo apt -y install nginx
@@ -72,7 +72,7 @@ sudo mkdir -p /etc/pihole/
 sudo cp pi-hole-setup.conf /etc/pihole/setupVars.conf
 script="$(mktemp)"
 wget -O "$script" https://install.pi-hole.net
-bash "$script" --unattended
+sudo bash "$script" --unattended
 rm "$script"
 pihole -a -p "$PASSWORD"
 sed "s/<<<domain>>>/$DOMAIN/" lighttpd.external.conf | sudo tee /etc/lighttpd/external.conf
