@@ -2,6 +2,11 @@
 
 set -e
 
+error() {
+  echo >&2 "$1"
+  exit 1
+}
+
 while [[ $# -gt 0 ]]; do
   key="$1"
   case $key in
@@ -24,8 +29,7 @@ while [[ $# -gt 0 ]]; do
     ;;
 
   *) # unknown option
-    echo >&2 "Unknown option $1"
-    exit 1
+    error "Unknown option $1"
     ;;
   esac
 done
@@ -35,6 +39,10 @@ if [ -z "$PASSWORD" ]; then
   read -s PASSWORD
   echo
 fi
+
+if [ -z "$EMAIL" ]; then error "No email"; fi
+if [ -z "$DOMAIN" ]; then error "No domain"; fi
+if [ -z "$PASSWORD" ]; then error "No password"; fi
 
 # Install system updates.
 sudo apt update
