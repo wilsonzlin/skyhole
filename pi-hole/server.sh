@@ -2,11 +2,11 @@
 
 set -e
 
-pushd "$(dirname "$0")"
+pushd "$(dirname "$0")" > /dev/null
 
 error() {
   echo >&2 "$1"
-  popd
+  popd > /dev/nul
   exit 1
 }
 
@@ -91,4 +91,4 @@ sudo ufw allow proto tcp from any to any port 443
 sudo ufw allow proto tcp from any to any port 853
 sudo ufw enable
 
-popd
+popd > /dev/null
