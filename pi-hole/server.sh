@@ -6,7 +6,7 @@ pushd "$(dirname "$0")" > /dev/null
 
 error() {
   echo >&2 "$1"
-  popd > /dev/nul
+  popd > /dev/null
   exit 1
 }
 
