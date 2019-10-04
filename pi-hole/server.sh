@@ -2,10 +2,15 @@
 
 set -e
 
+pushd "$(dirname "$0")"
+
 error() {
   echo >&2 "$1"
+  popd
   exit 1
 }
+
+export DEBIAN_FRONTEND=noninteractive
 
 while [[ $# -gt 0 ]]; do
   key="$1"
@@ -52,7 +57,10 @@ sudo apt install -y software-properties-common
 # Install Nginx.
 sudo apt -y install nginx
 sudo cp nginx.conf /etc/nginx/.
-sudo systemctl restart nginx
+# Stop to prevent conflicting with lighttpd.
+# Don't reload/restart Nginx yet, as certificate hasn't been copied yet.
+# Post-hook will do this automatically.
+sudo systemctl stop nginx
 
 # Install Stubby.
 sudo apt install -y stubby
@@ -82,3 +90,5 @@ sudo ufw allow proto tcp from any to any port 443
 # Incoming and outgoing DNS-over-TLS.
 sudo ufw allow proto tcp from any to any port 853
 sudo ufw enable
+
+popd
