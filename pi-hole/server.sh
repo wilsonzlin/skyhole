@@ -68,6 +68,7 @@ sudo sed -i 's/^  - 127.0.0.1$/  - 127.0.0.2/' /etc/stubby/stubby.yml
 sudo sed -i 's/^  - 0::1$/  - 0::2/' /etc/stubby/stubby.yml
 
 # Install Pi-hole.
+sudo mkdir -p /etc/pihole/
 sed "s/<<<password>>>/$PASSWORD/" pi-hole-setup.conf | sudo tee /etc/pihole/setupVars.conf
 curl -L https://install.pi-hole.net | bash /dev/stdin --unattended
 sed "s/<<<domain>>>/$DOMAIN/" lighttpd.external.conf | sudo tee /etc/lighttpd/external.conf
