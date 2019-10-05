@@ -24,16 +24,38 @@ Let's Encrypt provides and automatically renews TLS certificates for the DNS-ove
 
 ### Prerequisites
 
+- Server running Ubuntu 18.04 LTS.
+  - This server must have a static IPv4 address within its local network.
+- Domain name pointing to the IP address of the server.
+  - This IP should not change.
+- SSH access to the server.
+
 ### Install
+
+1. Clone this repo: `git clone https://github.com/wilsonzlin/nf.git`.
+2. Run the server script: `nf/pi-hole/server.sh --email YOUR_EMAIL --domain YOUR_DOMAIN`.
+  - Replace `YOUR_EMAIL` and `YOUR_DOMAIN` with the appropriate values.
+  - The email will be used by Let's Encrypt for [important communications](https://letsencrypt.org/docs/expiration-emails/).
+3. Enter the password to be set for the web interface of the Pi-hole.
 
 ### Usage
 
+- See the web interface at `https://YOUR_DOMAIN/admin` and sign in with the password set during installation.
+
 ## Client
 
-### Windows
+### Windows, macOS, Linux
 
-### macOS
+Set up [Stubby](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby) with the following value for `upstream_recursive_servers` (replace/comment any existing settings):
 
-### Linux
+```yaml
+upstream_recursive_servers:
+  - address_data: YOUR_SERVER_IPV4_ADDRESS
+    tls_auth_name: "YOUR_DOMAIN (quoted)"
+```
 
-### Android
+### Android 9 and higher
+
+1. Go to Settings → Network & internet → Advanced → Private DNS.
+1. Select the Private DNS provider hostname option.
+1. Enter `YOUR_DOMAIN` and hit Save.
