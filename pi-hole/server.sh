@@ -71,9 +71,9 @@ sudo sed -i 's/^  - 0::1$/  - 0::2/' /etc/stubby/stubby.yml
 sudo mkdir -p /etc/pihole/
 # Find IPv4 address, gateway, subnet, and interface.
 route=$(ip route get 8.8.8.8 | head -1)
-ipv4="$(echo $route | awk '{print $7')"
-gateway="$(echo $route | awk '{print $3')"
-interface="$(echo $route | awk '{print $5')"
+ipv4="$(echo $route | awk '{print $7}')"
+gateway="$(echo $route | awk '{print $3}')"
+interface="$(echo $route | awk '{print $5}')"
 subnet=$(ip -oneline -family inet address show | grep "${ipv4}/" |  awk '{print $4}')
 # Run Pi-hole install script.
 sed \
