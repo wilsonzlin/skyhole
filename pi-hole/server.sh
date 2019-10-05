@@ -97,11 +97,11 @@ sudo mkdir -p /etc/letsencrypt/renewal-hooks/pre
 sudo cp certbot-pre.sh /etc/letsencrypt/renewal-hooks/pre/pre.sh
 # Install post hook.
 sudo mkdir -p /etc/letsencrypt/renewal-hooks/post
-sed "s/<<<domain>>>/$DOMAIN/" cerbot-post.sh | sudo tee /etc/letsencrypt/renewal-hooks/post/post.sh
+sed "s/<<<domain>>>/$DOMAIN/" certbot-post.sh | sudo tee /etc/letsencrypt/renewal-hooks/post/post.sh
 # certonly doesn't run hooks, so run manually.
-/etc/letsencrypt/renewal-hooks/pre/pre.sh
+sudo /etc/letsencrypt/renewal-hooks/pre/pre.sh
 sudo certbot certonly --standalone --non-interactive --agree-tos -m "$EMAIL" -d "$DOMAIN"
-/etc/letsencrypt/renewal-hooks/pre/post.sh
+sudo /etc/letsencrypt/renewal-hooks/pre/post.sh
 
 # Firewall.
 # Incoming SSH.
