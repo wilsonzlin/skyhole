@@ -24,13 +24,16 @@ Let's Encrypt provides and automatically renews TLS certificates for the DNS-ove
 
 ### Prerequisites
 
-- Server running Ubuntu 18.04 LTS.
+- Server with a fresh install of Ubuntu 18.04 LTS.
   - This server must have a static IPv4 address within its local network.
+  - It should also be connected to the Internet, and be able to communicate on ports 443 and 853 incoming and outgoing.
 - Domain name pointing to the IP address of the server.
   - This IP should not change.
 - SSH access to the server.
 
 ### Install
+
+SSH into the server and run the following commands on the server:
 
 1. Clone this repo: `git clone https://github.com/wilsonzlin/nf.git`.
 2. Run the server script: `nf/pi-hole/server.sh --email YOUR_EMAIL --domain YOUR_DOMAIN`.
