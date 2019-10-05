@@ -69,7 +69,17 @@ sudo sed -i 's/^  - 0::1$/  - 0::2/' /etc/stubby/stubby.yml
 
 # Install Pi-hole.
 sudo mkdir -p /etc/pihole/
-sudo cp pi-hole-setup.conf /etc/pihole/setupVars.conf
+# Find IPv4 address, gateway, subnet, and interface.
+route=$(ip route get 8.8.8.8 | head -1)
+ipv4="$(echo $route | awk '{print $7')"
+gateway="$(echo $route | awk '{print $3')"
+interface="$(echo $route | awk '{print $5')"
+subnet=$(ip -oneline -family inet address show | grep "${ipv4}/" |  awk '{print $4}')
+# Run Pi-hole install script.
+sed \
+  "s/<<<ipv4>>>/$subnet/" \
+  "s/<<<interface>>>/$interface/" \
+  pi-hole-setup.conf | sudo tee /etc/pihole/setupVars.conf
 script="$(mktemp)"
 wget -O "$script" https://install.pi-hole.net
 sudo bash "$script" --unattended
