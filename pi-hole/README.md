@@ -6,6 +6,8 @@ This setup uses DNS-over-TLS to serve and forward DNS queries for more privacy. 
 
 ## Components
 
+![Diagram of the components](./system.svg)
+
 ### Nginx
 
 Nginx creates a TLS proxy to serve DNS-over-TLS requests and send them to the Pi-hole DNS server.
