@@ -92,12 +92,16 @@ sudo add-apt-repository -y universe
 sudo add-apt-repository -y ppa:certbot/certbot
 sudo apt update
 sudo apt install -y certbot
+# Install pre hook.
 sudo mkdir -p /etc/letsencrypt/renewal-hooks/pre
+sudo cp certbot-pre.sh /etc/letsencrypt/renewal-hooks/pre/pre.sh
+# Install post hook.
 sudo mkdir -p /etc/letsencrypt/renewal-hooks/post
-sed "s/<<<domain>>>/$DOMAIN/" post-00-copy-cert.sh | sudo tee /etc/letsencrypt/renewal-hooks/post/00-copy-cert.sh
-sudo cp pre/* /etc/letsencrypt/renewal-hooks/pre/.
-sudo cp post/* /etc/letsencrypt/renewal-hooks/post/.
+sed "s/<<<domain>>>/$DOMAIN/" cerbot-post.sh | sudo tee /etc/letsencrypt/renewal-hooks/post/post.sh
+# certonly doesn't run hooks, so run manually.
+/etc/letsencrypt/renewal-hooks/pre/pre.sh
 sudo certbot certonly --standalone --non-interactive --agree-tos -m "$EMAIL" -d "$DOMAIN"
+/etc/letsencrypt/renewal-hooks/pre/post.sh
 
 # Firewall.
 # Incoming SSH.
