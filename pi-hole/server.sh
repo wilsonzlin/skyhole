@@ -65,16 +65,16 @@ sudo systemctl stop nginx
 # Install Stubby.
 sudo apt install -y stubby
 sudo sed -i 's/^  - 127.0.0.1$/  - 127.0.0.2/' /etc/stubby/stubby.yml
-sudo sed -i 's/^  - 0::1$/  - 0::2/' /etc/stubby/stubby.yml
+# It's not a typo; there are two spaces after the hyphen in the original file.
+sudo sed -i 's/^  -  0::1$/  - 0::2/' /etc/stubby/stubby.yml
 
 # Install Pi-hole.
 sudo mkdir -p /etc/pihole/
-# Find IPv4 address, gateway, subnet, and interface.
+# Find IPv4 address, subnet, and interface.
 route=$(ip route get 8.8.8.8 | head -1)
 ipv4="$(echo $route | awk '{print $7}')"
-gateway="$(echo $route | awk '{print $3}')"
 interface="$(echo $route | awk '{print $5}')"
-subnet=$(ip -oneline -family inet address show | grep "${ipv4}/" |  awk '{print $4}')
+subnet="$(ip -oneline -family inet address show | grep "${ipv4}/" | awk '{print $4}')"
 # Run Pi-hole install script.
 # Subnet contains slashes, so use % for sed.
 sed "s%<<<ipv4>>>%$subnet%; s%<<<interface>>>%$interface%" pi-hole-setup.conf | \
@@ -92,6 +92,8 @@ sudo add-apt-repository -y universe
 sudo add-apt-repository -y ppa:certbot/certbot
 sudo apt update
 sudo apt install -y certbot
+sudo mkdir -p /etc/letsencrypt/renewal-hooks/pre
+sudo mkdir -p /etc/letsencrypt/renewal-hooks/post
 sed "s/<<<domain>>>/$DOMAIN/" post-00-copy-cert.sh | sudo tee /etc/letsencrypt/renewal-hooks/post/00-copy-cert.sh
 sudo cp pre/* /etc/letsencrypt/renewal-hooks/pre/.
 sudo cp post/* /etc/letsencrypt/renewal-hooks/post/.
