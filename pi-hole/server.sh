@@ -76,9 +76,10 @@ gateway="$(echo $route | awk '{print $3}')"
 interface="$(echo $route | awk '{print $5}')"
 subnet=$(ip -oneline -family inet address show | grep "${ipv4}/" |  awk '{print $4}')
 # Run Pi-hole install script.
+# Subnet contains slashes, so use % for sed.
 sed \
-  "s/<<<ipv4>>>/$subnet/" \
-  "s/<<<interface>>>/$interface/" \
+  "s%<<<ipv4>>>%$subnet%" \
+  "s%<<<interface>>>%$interface%" \
   pi-hole-setup.conf | sudo tee /etc/pihole/setupVars.conf
 script="$(mktemp)"
 wget -O "$script" https://install.pi-hole.net
