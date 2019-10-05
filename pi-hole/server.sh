@@ -97,7 +97,7 @@ sudo mkdir -p /etc/letsencrypt/renewal-hooks/post
 sed "s/<<<domain>>>/$DOMAIN/" post-00-copy-cert.sh | sudo tee /etc/letsencrypt/renewal-hooks/post/00-copy-cert.sh
 sudo cp pre/* /etc/letsencrypt/renewal-hooks/pre/.
 sudo cp post/* /etc/letsencrypt/renewal-hooks/post/.
-certbot certonly --standalone --non-interactive --agree-tos -m "$EMAIL" -d "$DOMAIN"
+sudo certbot certonly --standalone --non-interactive --agree-tos -m "$EMAIL" -d "$DOMAIN"
 
 # Firewall.
 # Incoming SSH.
