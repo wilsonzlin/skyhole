@@ -8,17 +8,11 @@ This setup uses DNS-over-TLS to serve and forward DNS queries for more privacy. 
 
 ![Diagram of the components](./system.png)
 
-### Nginx
-
-Nginx creates a TLS proxy to serve DNS-over-TLS requests and send them to the Pi-hole DNS server.
-
-### Stubby
-
-Stubby is used as the upstream DNS for Pi-hole so that queries from Pi-hole that it cannot answer are done using DNS-over-TLS.
-
-### Let's Encrypt
-
-Let's Encrypt provides and automatically renews TLS certificates for the DNS-over-TLS server and Pi-hole web interface.
+|Component|Description|
+|---|---|
+|Nginx|Nginx creates a TLS proxy to serve DNS-over-TLS requests and send them to the Pi-hole DNS server.|
+|Stubby|Stubby is used as the upstream DNS for Pi-hole so that queries from Pi-hole that it cannot answer are done using DNS-over-TLS.|
+|Let's Encrypt|Let's Encrypt provides and automatically renews TLS certificates for the DNS-over-TLS server and Pi-hole web interface.|
 
 ## Server
 
@@ -39,7 +33,20 @@ SSH into the server and run the following commands on the server:
 2. Run the server script: `nf/pi-hole/server.sh --email YOUR_EMAIL --domain YOUR_DOMAIN`.
   - Replace `YOUR_EMAIL` and `YOUR_DOMAIN` with the appropriate values.
   - The email will be used by Let's Encrypt for [important communications](https://letsencrypt.org/docs/expiration-emails/).
+  - See the full list of options below.
 3. Enter the password to be set for the web interface of the Pi-hole.
+
+Script options:
+
+|Name|Value|Description|
+|---|---|---|
+|`--email`|**Required**|Used by Let's Encrypt for [important communications](https://letsencrypt.org/docs/expiration-emails/).|
+|`--domain`|**Required**|Domain name of the server e.g. `pihole.mywebsite.com`. This should resolve to the server's public IPv4 address.|
+|`--password`||Password for the Pi-hole web interface. **If not provided, will be prompted for.**|
+|`--ssh`|22|Port to listen on for the SSH service.|
+|`--https`|443|Port to listen on for the Pi-hole web interface over HTTPS.|
+|`--dot`|853|Port to listen on for the DNS-over-TLS Nginx proxy.|
+|`--incoming`|0.0.0.0/0|What IPv4 address range to allow connections from on the SSH, HTTPS, and DNS-over-TLS ports.|
 
 ### Usage
 

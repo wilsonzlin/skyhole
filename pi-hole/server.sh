@@ -55,12 +55,6 @@ while [[ $# -gt 0 ]]; do
     shift # past value
     ;;
 
-  --clear-ssh-keys)
-    CLEAR_SSH_KEYS=true
-    shift # past argument
-    shift # past value
-    ;;
-
   *) # unknown option
     error "Unknown option $1"
     ;;
@@ -153,9 +147,6 @@ sudo /etc/letsencrypt/renewal-hooks/post/post.sh
 
 # SSH
 sudo sed -i "s/^#Port 22$/Port $SSH_PORT/" /etc/ssh/sshd_config
-if [ "$CLEAR_SSH_KEYS" = true ]; then
-  rm -f "$HOME/.ssh/authorized_keys"
-fi
 
 # Firewall.
 # Incoming SSH.
