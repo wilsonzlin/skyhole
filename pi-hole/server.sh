@@ -151,6 +151,7 @@ sudo /etc/letsencrypt/renewal-hooks/post/post.sh
 
 # SSH
 sudo sed -i "s/^#Port 22$/Port $SSH_PORT/" /etc/ssh/sshd_config
+sudo systemctl restart ssh
 
 # Firewall.
 # Incoming SSH.
