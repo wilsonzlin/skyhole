@@ -6,7 +6,7 @@ This setup uses DNS-over-TLS to serve and forward DNS queries for more privacy. 
 
 ## Components
 
-![Diagram of the components](./system.svg)
+![Diagram of the components](./system.png)
 
 ### Nginx
 
