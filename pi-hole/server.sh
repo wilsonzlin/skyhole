@@ -159,6 +159,6 @@ sudo ufw allow proto tcp from "$FIREWALL_CIDR" to "$FIREWALL_CIDR" port "$SSH_PO
 sudo ufw allow proto tcp from "$FIREWALL_CIDR" to "$FIREWALL_CIDR" port "$HTTPS_PORT"
 # Incoming and outgoing DNS-over-TLS.
 sudo ufw allow proto tcp from "$FIREWALL_CIDR" to "$FIREWALL_CIDR" port "$DOT_PORT"
-sudo ufw enable
+sudo ufw --force enable
 
 popd > /dev/null
