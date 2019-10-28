@@ -145,10 +145,11 @@ sudo cp certbot-pre.sh /etc/letsencrypt/renewal-hooks/pre/pre.sh
 # Install post hook.
 sudo mkdir -p /etc/letsencrypt/renewal-hooks/post
 sed "s/<<<domain>>>/$DOMAIN/" certbot-post.sh | sudo tee /etc/letsencrypt/renewal-hooks/post/post.sh
+sudo chmod +x /etc/letsencrypt/renewal-hools/post/post.sh
 # certonly doesn't run hooks, so run manually.
 sudo /etc/letsencrypt/renewal-hooks/pre/pre.sh
 sudo certbot certonly --standalone --non-interactive --agree-tos -m "$EMAIL" -d "$DOMAIN"
-sudo /etc/letsencrypt/renewal-hooks/pre/post.sh
+sudo /etc/letsencrypt/renewal-hooks/post/post.sh
 
 # SSH
 sudo sed -i "s/^#Port 22$/Port $SSH_PORT/" /etc/ssh/sshd_config
