@@ -10,8 +10,6 @@ error() {
   exit 1
 }
 
-export DEBIAN_FRONTEND=noninteractive
-
 while [[ $# -gt 0 ]]; do
   key="$1"
   case $key in
@@ -33,6 +31,36 @@ while [[ $# -gt 0 ]]; do
     shift # past value
     ;;
 
+  --ssh)
+    SSH_PORT="$2"
+    shift # past argument
+    shift # past value
+    ;;
+
+  --https)
+    HTTPS_PORT="$2"
+    shift # past argument
+    shift # past value
+    ;;
+
+  --dot)
+    DOT_PORT="$2"
+    shift # past argument
+    shift # past value
+    ;;
+
+  --incoming)
+    FIREWALL_CIDR="$2"
+    shift # past argument
+    shift # past value
+    ;;
+
+  --clear-ssh-keys)
+    CLEAR_SSH_KEYS=true
+    shift # past argument
+    shift # past value
+    ;;
+
   *) # unknown option
     error "Unknown option $1"
     ;;
@@ -48,15 +76,27 @@ fi
 if [ -z "$EMAIL" ]; then error "No email"; fi
 if [ -z "$DOMAIN" ]; then error "No domain"; fi
 if [ -z "$PASSWORD" ]; then error "No password"; fi
+if [ -z "$SSH_PORT" ]; then SSH_PORT=22; fi
+if [ -z "$HTTPS_PORT" ]; then HTTPS_PORT=443; fi
+if [ -z "$DOT_PORT" ]; then DOT_PORT=853; fi
+if [ -z "$FIREWALL_CIDR" ]; then FIREWALL_CIDR=0.0.0.0/0; fi
+
+export DEBIAN_FRONTEND=noninteractive
 
 # Install system updates.
 sudo apt update
-sudo apt dist-upgrade -yq
+sudo apt dist-upgrade -yq \
+  -o Dpkg::Options::=--force-confold \
+  -o Dpkg::Options::=--force-confdef \
+  --allow-downgrades \
+  --allow-remove-essential \
+  --allow-change-held-packages
 sudo apt install -y software-properties-common wget
 
 # Install Nginx.
 sudo apt -y install nginx
-sudo cp nginx.conf /etc/nginx/.
+sed "s/<<<port>>>/$DOT_PORT/" nginx.conf | \
+  sudo tee /etc/nginx/nginx.conf
 # Stop to prevent conflicting with lighttpd.
 # Don't reload/restart Nginx yet, as certificate hasn't been copied yet.
 # Post-hook will do this automatically.
@@ -84,7 +124,8 @@ wget -O "$script" https://install.pi-hole.net
 sudo bash "$script" --unattended
 rm "$script"
 pihole -a -p "$PASSWORD"
-sed "s/<<<domain>>>/$DOMAIN/" lighttpd.external.conf | sudo tee /etc/lighttpd/external.conf
+sed "s/<<<domain>>>/$DOMAIN/; s/<<<port>>>/$HTTPS_PORT/" lighttpd.external.conf | \
+  sudo tee /etc/lighttpd/external.conf
 
 # Install Certbot.
 # Do this last so that pre and post hooks work.
@@ -103,13 +144,19 @@ sudo /etc/letsencrypt/renewal-hooks/pre/pre.sh
 sudo certbot certonly --standalone --non-interactive --agree-tos -m "$EMAIL" -d "$DOMAIN"
 sudo /etc/letsencrypt/renewal-hooks/pre/post.sh
 
+# SSH
+sudo sed -i "s/^#Port 22$/Port $SSH_PORT/" /etc/ssh/sshd_config
+if [ "$CLEAR_SSH_KEYS" = true ]; then
+  rm -f "$HOME/.ssh/authorized_keys"
+fi
+
 # Firewall.
 # Incoming SSH.
-sudo ufw allow proto tcp from any to any port 22
+sudo ufw allow proto tcp from "$FIREWALL_CIDR" to "$FIREWALL_CIDR" port "$SSH_PORT"
 # Incoming HTTPS.
-sudo ufw allow proto tcp from any to any port 443
+sudo ufw allow proto tcp from "$FIREWALL_CIDR" to "$FIREWALL_CIDR" port "$SSL_PORT"
 # Incoming and outgoing DNS-over-TLS.
-sudo ufw allow proto tcp from any to any port 853
+sudo ufw allow proto tcp from "$FIREWALL_CIDR" to "$FIREWALL_CIDR" port "$DOT_PORT"
 sudo ufw enable
 
 popd > /dev/null
