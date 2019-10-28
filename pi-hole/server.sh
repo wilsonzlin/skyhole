@@ -98,6 +98,8 @@ sudo apt install -y software-properties-common wget
 sudo apt -y install nginx
 sed "s/<<<port>>>/$DOT_PORT/" nginx.conf | \
   sudo tee /etc/nginx/nginx.conf
+# This will be eventually used by Let's Encrypt post-renewal script.
+sudo mkdir -p /etc/nginx/ssl
 # Stop to prevent conflicting with lighttpd.
 # Don't reload/restart Nginx yet, as certificate hasn't been copied yet.
 # Post-hook will do this automatically.
@@ -154,7 +156,7 @@ sudo sed -i "s/^#Port 22$/Port $SSH_PORT/" /etc/ssh/sshd_config
 # Incoming SSH.
 sudo ufw allow proto tcp from "$FIREWALL_CIDR" to "$FIREWALL_CIDR" port "$SSH_PORT"
 # Incoming HTTPS.
-sudo ufw allow proto tcp from "$FIREWALL_CIDR" to "$FIREWALL_CIDR" port "$SSL_PORT"
+sudo ufw allow proto tcp from "$FIREWALL_CIDR" to "$FIREWALL_CIDR" port "$HTTPS_PORT"
 # Incoming and outgoing DNS-over-TLS.
 sudo ufw allow proto tcp from "$FIREWALL_CIDR" to "$FIREWALL_CIDR" port "$DOT_PORT"
 sudo ufw enable
