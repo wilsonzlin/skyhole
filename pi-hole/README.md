@@ -51,6 +51,7 @@ Script options:
 ### Usage
 
 - See the web interface at `https://YOUR_DOMAIN/admin` and sign in with the password set during installation.
+- Set your clients to use the server as their DNS resolver using DNS-over-TLS. See [#Client](Client) for details.
 
 ## Client
 
