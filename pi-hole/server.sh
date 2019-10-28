@@ -86,13 +86,13 @@ if [ -z "$HTTPS_PORT" ]; then HTTPS_PORT=443; fi
 if [ -z "$DOT_PORT" ]; then DOT_PORT=853; fi
 if [ -z "$FIREWALL_CIDR" ]; then FIREWALL_CIDR=0.0.0.0/0; fi
 
-export DEBIAN_FRONTEND=noninteractive
-
 # Install system updates.
 sudo apt update
-sudo apt dist-upgrade -yq \
+sudo DEBIAN_FRONTEND=noninteractive apt \
   -o Dpkg::Options::=--force-confold \
   -o Dpkg::Options::=--force-confdef \
+  dist-upgrade \
+  -yq \
   --allow-downgrades \
   --allow-remove-essential \
   --allow-change-held-packages
@@ -112,6 +112,7 @@ sudo apt install -y stubby
 sudo sed -i 's/^  - 127.0.0.1$/  - 127.0.0.2/' /etc/stubby/stubby.yml
 # It's not a typo; there are two spaces after the hyphen in the original file.
 sudo sed -i 's/^  -  0::1$/  - 0::2/' /etc/stubby/stubby.yml
+sudo systemctl restart stubby
 
 # Install Pi-hole.
 sudo mkdir -p /etc/pihole/
