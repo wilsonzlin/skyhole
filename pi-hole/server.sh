@@ -68,8 +68,13 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [ -z "$PASSWORD" ]; then
-  echo -n Password:
+  echo -n 'Password: '
   read -s PASSWORD
+  echo -n 'Confirm password: '
+  read -s PASSWORD_CONFIRM
+  if [ "$PASSWORD" != "$PASSWORD_CONFIRM" ]; then
+    error "Passwords do not match"
+  fi
   echo
 fi
 
