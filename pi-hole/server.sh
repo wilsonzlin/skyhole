@@ -64,8 +64,10 @@ done
 if [ -z "$PASSWORD" ]; then
   echo -n 'Password: '
   read -s PASSWORD
+  echo
   echo -n 'Confirm password: '
   read -s PASSWORD_CONFIRM
+  echo
   if [ "$PASSWORD" != "$PASSWORD_CONFIRM" ]; then
     error "Passwords do not match"
   fi
