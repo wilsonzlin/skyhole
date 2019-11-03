@@ -20,10 +20,19 @@ This setup uses DNS-over-TLS to serve and forward DNS queries for more privacy. 
 
 - Server with a fresh install of Ubuntu 18.04 LTS.
   - This server must have a static IPv4 address within its local network.
-  - It should also be connected to the Internet, and be able to communicate on ports 443 and 853 incoming and outgoing.
+  - It should also be connected to the Internet and be able to to send/receive over the ports listed below to/from anywhere.
 - Domain name pointing to the IP address of the server.
   - This IP should not change.
 - SSH access to the server.
+
+#### Initial firewall rules
+
+|Protocol|Port|Direction|Reason|
+|---|---|---|---|
+|TCP|22|In|Standard SSH for initial setup.|
+|TCP|80|In|Let's Encrypt initial HTTP-01 challenge.|
+|UDP, TCP|53|Out|Standard DNS queries for initial setup.|
+|TCP|80, 443|Out|Standard outgoing HTTP requests for initial setup.|
 
 ### Install
 
@@ -36,7 +45,7 @@ SSH into the server and run the following commands on the server:
   - See the full list of options below.
 3. Enter the password to be set for the web interface of the Pi-hole.
 
-Script options:
+#### Script options
 
 |Name|Value|Description|
 |---|---|---|
@@ -47,6 +56,17 @@ Script options:
 |`--https`|443|Port to listen on for the Pi-hole web interface over HTTPS.|
 |`--dot`|853|Port to listen on for the DNS-over-TLS Nginx proxy.|
 |`--incoming`|0.0.0.0/0|What IPv4 address range to allow connections from on the SSH, HTTPS, and DNS-over-TLS ports.|
+
+#### Normal operation firewall rules
+
+|Protocol|Port|Direction|Reason|
+|---|---|---|---|
+|TCP|80|In|Let's Encrypt renewals.|
+|TCP|`--dot`|In|DNS-over-TLS server.|
+|TCP|`--https`|In|Pi-hole web interface over HTTPS.|
+|TCP|`--ssh`|In (optional)|SSH access.|
+|TCP|80, 443|Out|Standard outgoing HTTP requests for Let's Encrypt renewals.|
+|TCP|853|Out|Upstream DNS-over-TLS via Stubby.|
 
 ### Usage
 
