@@ -1,4 +1,8 @@
-# Pi-hole
+# Skyhole
+
+Script to automatically set up a secure personal DNS-over-TLS server with blocking.
+
+## Description
 
 Pi-hole is a convenient DNS server that can block requests to unwanted domains through managed and custom lists. It comes with a web interface that provides insights about queries and management of the server.
 
