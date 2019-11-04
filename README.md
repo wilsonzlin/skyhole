@@ -43,6 +43,7 @@ This setup uses DNS-over-TLS to serve and forward DNS queries for more privacy. 
 SSH into the server and run the following commands on the server:
 
 1. Clone this repo: `git clone https://github.com/wilsonzlin/skyhole.git`.
+  - If git is not available, it's also possible to download the repo directly as an archive: `wget -qO - https://github.com/wilsonzlin/skyhole/archive/master.tar.gz | tar -xvz && mv skyhole-master skyhole`
 2. Run the server script: `bash skyhole/server.sh --email YOUR_EMAIL --domain YOUR_DOMAIN`.
   - Replace `YOUR_EMAIL` and `YOUR_DOMAIN` with the appropriate values.
   - The email will be used by Let's Encrypt for [important communications](https://letsencrypt.org/docs/expiration-emails/).
