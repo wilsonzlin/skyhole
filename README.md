@@ -31,12 +31,12 @@ This setup uses DNS-over-TLS to serve and forward DNS queries for more privacy. 
 
 #### Initial firewall rules
 
-|Protocol|Port|Direction|Reason|
+|Protocol|Direction|Port|Reason|
 |---|---|---|---|
-|TCP|22|In|Standard SSH for initial setup.|
-|TCP|80|In|Let's Encrypt initial HTTP-01 challenge.|
-|UDP, TCP|53|Out|Standard DNS queries for initial setup.|
-|TCP|80, 443|Out|Standard outgoing HTTP requests for initial setup.|
+|TCP|In|22|Standard SSH for initial setup.|
+|TCP|In|80|Let's Encrypt initial HTTP-01 challenge.|
+|UDP, TCP|Out|53|Standard DNS queries for initial setup.|
+|TCP|Out|80, 443|Standard outgoing HTTP requests for initial setup.|
 
 ### Install
 
@@ -64,14 +64,14 @@ SSH into the server and run the following commands on the server:
 
 #### Normal operation firewall rules
 
-|Protocol|Port|Direction|Reason|
+|Protocol|Direction|Port|Reason|
 |---|---|---|---|
-|TCP|80|In|Let's Encrypt renewals.|
-|TCP|`--dot`|In|DNS-over-TLS server.|
-|TCP|`--https`|In|Pi-hole web interface over HTTPS.|
-|TCP|`--ssh`|In (optional)|SSH access.|
-|TCP|80, 443|Out|Standard outgoing HTTP requests for Let's Encrypt renewals.|
-|TCP|853|Out|Upstream DNS-over-TLS via Stubby.|
+|TCP|In|80|Let's Encrypt renewals.|
+|TCP|In|`--dot`|DNS-over-TLS server.|
+|TCP|In|`--https`|Pi-hole web interface over HTTPS.|
+|TCP|In (optional)|`--ssh`|SSH access.|
+|TCP|Out|80, 443|Standard outgoing HTTP requests for Let's Encrypt renewals, system updates, and Pi-hole blocklist updates.|
+|TCP|Out|853|Upstream DNS-over-TLS via Stubby.|
 
 ### Usage
 

@@ -156,6 +156,8 @@ sudo systemctl restart ssh
 # Firewall.
 # Incoming SSH.
 sudo ufw allow proto tcp from "$FIREWALL_CIDR" to "$FIREWALL_CIDR" port "$SSH_PORT"
+# Incoming HTTP for Let's Encrypt renewals.
+sudo ufw allow proto tcp from any to any port 80
 # Incoming HTTPS.
 sudo ufw allow proto tcp from "$FIREWALL_CIDR" to "$FIREWALL_CIDR" port "$HTTPS_PORT"
 # Incoming and outgoing DNS-over-TLS.
