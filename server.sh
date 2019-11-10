@@ -61,26 +61,26 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [ -z "$PASSWORD" ]; then
-  echo -n 'Password: '
+if [ -z "$EMAIL" ]; then error "No email"; fi
+if [ -z "$DOMAIN" ]; then error "No domain"; fi
+if [ -z "$SSH_PORT" ]; then SSH_PORT=22; fi
+if [ -z "$HTTPS_PORT" ]; then HTTPS_PORT=443; fi
+if [ -z "$DOT_PORT" ]; then DOT_PORT=853; fi
+if [ -z "$FIREWALL_CIDR" ]; then FIREWALL_CIDR=0.0.0.0/0; fi
+
+while [ -z "$PASSWORD" ]; do
+  echo -n 'No password provided, please provide one now: '
   read -s PASSWORD
   echo
   echo -n 'Confirm password: '
   read -s PASSWORD_CONFIRM
   echo
   if [ "$PASSWORD" != "$PASSWORD_CONFIRM" ]; then
-    error "Passwords do not match"
+    echo 'Passwords do not match!'
+    PASSWORD=''
   fi
   echo
-fi
-
-if [ -z "$EMAIL" ]; then error "No email"; fi
-if [ -z "$DOMAIN" ]; then error "No domain"; fi
-if [ -z "$PASSWORD" ]; then error "No password"; fi
-if [ -z "$SSH_PORT" ]; then SSH_PORT=22; fi
-if [ -z "$HTTPS_PORT" ]; then HTTPS_PORT=443; fi
-if [ -z "$DOT_PORT" ]; then DOT_PORT=853; fi
-if [ -z "$FIREWALL_CIDR" ]; then FIREWALL_CIDR=0.0.0.0/0; fi
+done
 
 # Install system updates.
 sudo apt update
