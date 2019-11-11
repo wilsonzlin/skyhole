@@ -56,7 +56,7 @@ while [[ $# -gt 0 ]]; do
     ;;
 
   *) # unknown option
-    error "Unknown option $1"
+    error "Unknown option $key"
     ;;
   esac
 done
